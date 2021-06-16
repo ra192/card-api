@@ -1,18 +1,44 @@
 package com.card.service.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @SuppressWarnings("unused")
 public class CustomerDto {
+    @NotNull
     private Long accountId;
+
+    @NotEmpty
     private String phone;
+
+    @Email
     private String email;
+
+    @NotEmpty
     private String firstName;
+
+    @NotEmpty
     private String lastName;
+
+    @NotEmpty
     private String birthDate;
+
+    @NotEmpty
     private String address;
+
     private String address2;
+
+    @NotEmpty
     private String city;
+
+    @NotEmpty
     private String stateRegion;
+
+    @NotEmpty
     private String country;
+
+    @NotEmpty
     private String postalCode;
 
     public Long getAccountId() {

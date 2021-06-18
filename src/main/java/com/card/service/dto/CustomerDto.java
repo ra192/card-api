@@ -6,39 +6,39 @@ import javax.validation.constraints.NotNull;
 
 @SuppressWarnings("unused")
 public class CustomerDto {
-    @NotNull
+    @NotNull(message = "account id is required")
     private Long accountId;
 
-    @NotEmpty
+    @NotEmpty(message = "phone is required")
     private String phone;
 
-    @Email
+    @Email(message = "email is not valid")
     private String email;
 
-    @NotEmpty
+    @NotEmpty(message = "first name is required")
     private String firstName;
 
-    @NotEmpty
+    @NotEmpty(message = "last name is required")
     private String lastName;
 
-    @NotEmpty
+    @NotEmpty(message = "birth date is required")
     private String birthDate;
 
-    @NotEmpty
+    @NotEmpty(message = "address is required")
     private String address;
 
     private String address2;
 
-    @NotEmpty
+    @NotEmpty(message = "city is required")
     private String city;
 
-    @NotEmpty
+    @NotEmpty(message = "state region is required")
     private String stateRegion;
 
-    @NotEmpty
+    @NotEmpty(message = "country is required")
     private String country;
 
-    @NotEmpty
+    @NotEmpty(message = "postal code is required")
     private String postalCode;
 
     public Long getAccountId() {

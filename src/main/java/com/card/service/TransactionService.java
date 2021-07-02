@@ -45,9 +45,9 @@ public class TransactionService {
     }
 
     private Transaction createTransactionWithItems(Account account, Long amount, TransactionType type,
-                                                   TransactionItemType itemType, String orderId, Card card) {
+                                                   TransactionItemType baseItemType, String orderId, Card card) {
         final var items = new ArrayList<TransactionItem>();
-        items.add(new TransactionItem(amount, account, itemType, card));
+        items.add(new TransactionItem(amount, account, baseItemType, card));
 
         transactionFeeRepository.findByTypeAndAccount(type, account).ifPresent(fee ->
                 items.add(new TransactionItem((amount > 0) ? -amount : amount * fee.getRate().longValue(), account, TransactionItemType.FEE, null)));

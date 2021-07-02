@@ -34,32 +34,27 @@ public class TransactionService {
     }
 
     public Transaction deposit(Account account, Long amount, TransactionType type, String orderId, Card card) {
-        final var items = new ArrayList<TransactionItem>();
-        items.add(new TransactionItem(amount, account, TransactionItemType.DEPOSIT, card));
-
-        transactionFeeRepository.findByTypeAndAccount(type, account).ifPresent(fee ->
-                items.add(new TransactionItem(Float.valueOf(-amount*fee.getRate()).longValue(), account, TransactionItemType.FEE, null)));
-
-        final var transaction = transactionRepository.save(new Transaction(orderId, type, TransactionStatus.COMPLETED, items));
-
-        log.info("Deposit transaction was created");
-
-        return transaction;
+        return createTransactionWithItems(account, amount, type, TransactionItemType.DEPOSIT, orderId, card);
     }
 
     public Transaction withdraw(Account account, Long amount, TransactionType type, String orderId, Card card) throws TransactionException {
         if (transactionItemRepository.sumByAccount(account) - amount < 0)
             throw new TransactionException("Account does not have enough funds");
 
+        return createTransactionWithItems(account, -amount, type, TransactionItemType.WITHDRAW, orderId, card);
+    }
+
+    private Transaction createTransactionWithItems(Account account, Long amount, TransactionType type,
+                                                   TransactionItemType itemType, String orderId, Card card) {
         final var items = new ArrayList<TransactionItem>();
-        items.add(new TransactionItem(-amount, account, TransactionItemType.WITHDRAW, card));
+        items.add(new TransactionItem(amount, account, itemType, card));
 
         transactionFeeRepository.findByTypeAndAccount(type, account).ifPresent(fee ->
-                items.add(new TransactionItem(Float.valueOf(-amount*fee.getRate()).longValue(), account, TransactionItemType.FEE, null)));
+                items.add(new TransactionItem((amount > 0) ? -amount : amount * fee.getRate().longValue(), account, TransactionItemType.FEE, null)));
 
         final var transaction = transactionRepository.save(new Transaction(orderId, type, TransactionStatus.COMPLETED, items));
 
-        log.info("Withdraw transaction was created");
+        log.info("{} transaction was created", type);
 
         return transaction;
     }

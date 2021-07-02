@@ -4,7 +4,7 @@ import com.card.entity.enums.CardType;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Card implements Serializable {
@@ -25,7 +25,7 @@ public class Card implements Serializable {
     private Account account;
 
     @Column(nullable = false)
-    private Date created;
+    private LocalDateTime created;
 
     @Column
     private String info;
@@ -70,11 +70,11 @@ public class Card implements Serializable {
         this.account = account;
     }
 
-    public Date getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

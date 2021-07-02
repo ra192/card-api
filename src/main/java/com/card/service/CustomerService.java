@@ -8,8 +8,7 @@ import com.card.service.exception.CustomerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 @Service
 public class CustomerService {
@@ -30,18 +29,14 @@ public class CustomerService {
         final var customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);
         customer.setActive(true);
-        try {
-            customer.setBirthDate(new SimpleDateFormat("dd-MM-yyyy").parse(customerDto.getBirthDate()));
-        } catch (ParseException e) {
-            throw new CustomerException("Birth date format is not valid");
-        }
+        customer.setBirthDate(LocalDate.parse(customerDto.getBirthDate()));
         customer.setMerchant(account.getMerchant());
 
         return customerRepository.save(customer);
     }
 
     public Customer findActiveById(Long id) throws CustomerException {
-        return customerRepository.findByIdAndActive(id,true)
-                .orElseThrow(()->new CustomerException("Customer does not exist or is not active"));
+        return customerRepository.findByIdAndActive(id, true)
+                .orElseThrow(() -> new CustomerException("Customer does not exist or is not active"));
     }
 }

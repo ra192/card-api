@@ -2,7 +2,7 @@ package com.card.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Customer implements Serializable {
@@ -26,7 +26,7 @@ public class Customer implements Serializable {
     private String lastName;
 
     @Column(name = "birth_date", nullable = false)
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(nullable = false)
     private String address;
@@ -100,11 +100,11 @@ public class Customer implements Serializable {
         this.lastName = lastName;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

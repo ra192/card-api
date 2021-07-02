@@ -4,7 +4,7 @@ import com.card.entity.enums.TransactionItemType;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class TransactionItem implements Serializable {
@@ -19,7 +19,7 @@ public class TransactionItem implements Serializable {
     private Account account;
 
     @Column(nullable = false)
-    private Date created;
+    private LocalDateTime created;
 
     @Enumerated(EnumType.STRING)
     private TransactionItemType type;
@@ -32,7 +32,7 @@ public class TransactionItem implements Serializable {
     public TransactionItem(Long amount, Account account, TransactionItemType type, Card card) {
         this.amount = amount;
         this.account = account;
-        this.created = new Date();
+        this.created = LocalDateTime.now();
         this.type = type;
         this.card = card;
     }
@@ -45,11 +45,11 @@ public class TransactionItem implements Serializable {
         this.amount = amount;
     }
 
-    public Date getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 

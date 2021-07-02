@@ -11,6 +11,7 @@ import com.card.service.exception.CustomerException;
 import com.card.service.exception.TransactionException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -37,7 +38,7 @@ public class CardService {
         card.setProviderReferenceId("xxxx");
         card.setCustomer(customer);
         card.setAccount(account);
-        card.setCreated(new Date());
+        card.setCreated(LocalDateTime.now());
         card.setInfo("xxxx");
 
         cardRepository.save(card);

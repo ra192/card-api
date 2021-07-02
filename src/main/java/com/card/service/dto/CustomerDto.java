@@ -3,6 +3,7 @@ package com.card.service.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @SuppressWarnings("unused")
 public class CustomerDto {
@@ -22,7 +23,7 @@ public class CustomerDto {
     private String lastName;
 
     @NotEmpty(message = "birth date is required")
-    private String birthDate;
+    private LocalDate birthDate;
 
     @NotEmpty(message = "address is required")
     private String address;
@@ -81,11 +82,11 @@ public class CustomerDto {
         this.lastName = lastName;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 

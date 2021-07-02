@@ -8,8 +8,6 @@ import com.card.service.exception.CustomerException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-
 @Service
 public class CustomerService {
     private final CustomerRepository customerRepository;
@@ -29,7 +27,6 @@ public class CustomerService {
         final var customer = new Customer();
         BeanUtils.copyProperties(customerDto, customer);
         customer.setActive(true);
-        customer.setBirthDate(LocalDate.parse(customerDto.getBirthDate()));
         customer.setMerchant(account.getMerchant());
 
         return customerRepository.save(customer);

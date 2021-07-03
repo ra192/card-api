@@ -3,7 +3,6 @@ package com.card.controller;
 import com.card.controller.dto.CreateCustomerResultDto;
 import com.card.service.CustomerService;
 import com.card.service.dto.CustomerDto;
-import com.card.service.exception.AccountException;
 import com.card.service.exception.CustomerException;
 import com.card.service.exception.MerchantException;
 import org.slf4j.Logger;

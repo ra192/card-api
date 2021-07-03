@@ -7,8 +7,8 @@ import java.time.LocalDate;
 
 @SuppressWarnings("unused")
 public class CustomerDto {
-    @NotNull(message = "account id is required")
-    private Long accountId;
+    @NotNull(message = "merchant id is required")
+    private Long merchantId;
 
     @NotEmpty(message = "phone is required")
     private String phone;
@@ -42,12 +42,12 @@ public class CustomerDto {
     @NotEmpty(message = "postal code is required")
     private String postalCode;
 
-    public Long getAccountId() {
-        return accountId;
+    public Long getMerchantId() {
+        return merchantId;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 
     public String getPhone() {
@@ -140,7 +140,7 @@ public class CustomerDto {
 
     @Override
     public String toString() {
-        return "CustomerDto{" + "accountId=" + accountId +
+        return "CustomerDto{" + "merchantId=" + merchantId +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +

@@ -5,6 +5,7 @@ import com.card.service.CustomerService;
 import com.card.service.dto.CustomerDto;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.CustomerException;
+import com.card.service.exception.MerchantException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class CustomerController {
         try {
             final var customer = customerService.create(customerDto);
             return new CreateCustomerResultDto("ok", "", customer.getId());
-        } catch (CustomerException | AccountException e) {
+        } catch (CustomerException | MerchantException e) {
             log.error(e.getMessage());
             return new CreateCustomerResultDto("error", e.getMessage(), 0L);
         }

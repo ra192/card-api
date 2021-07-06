@@ -1,15 +1,13 @@
 package com.card.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 public class Merchant implements Serializable {
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name = "merchant_id_seq")
+    @GeneratedValue(generator = "merchant_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(nullable = false, unique = true)

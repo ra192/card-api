@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Entity
 public class TransactionItem implements Serializable {
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name = "transaction_item_id_seq")
+    @GeneratedValue(generator = "transaction_item_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(nullable = false)

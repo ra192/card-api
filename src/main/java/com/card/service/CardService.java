@@ -5,6 +5,8 @@ import com.card.entity.Transaction;
 import com.card.entity.enums.CardType;
 import com.card.entity.enums.TransactionType;
 import com.card.repository.CardRepository;
+import com.card.service.dto.CardTransactionDto;
+import com.card.service.dto.CreateCardDto;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.CardException;
 import com.card.service.exception.CustomerException;
@@ -28,10 +30,10 @@ public class CardService {
         this.transactionService = transactionService;
     }
 
-    public Card createVirtual(Long customerId, Long accountId) throws AccountException, CustomerException {
+    public Card createVirtual(CreateCardDto createDto) throws AccountException, CustomerException {
 
-        final var account = accountService.findActiveById(accountId);
-        final var customer = customerService.findActiveById(customerId);
+        final var account = accountService.findActiveById(createDto.getAccountId());
+        final var customer = customerService.findActiveById(createDto.getCustomerId());
 
         final var card = new Card();
         card.setType(CardType.VIRTUAL);
@@ -46,17 +48,19 @@ public class CardService {
         return card;
     }
 
-    public Transaction deposit(Long cardId, Long amount, String orderId) throws CardException, TransactionException {
-        final var card = findById(cardId);
-        return transactionService.withdraw(card.getAccount(), amount, TransactionType.VIRTUAL_CARD_DEPOSIT, orderId, card);
+    public Transaction deposit(CardTransactionDto transactionDto) throws CardException, TransactionException {
+        final var card = findById(transactionDto.getCardId());
+        return transactionService.withdraw(card.getAccount(), transactionDto.getAmount(),
+                TransactionType.VIRTUAL_CARD_DEPOSIT, transactionDto.getOrderId(), card);
     }
 
     public Card findById(Long id) throws CardException {
         return cardRepository.findById(id).orElseThrow(()->new CardException("Card does not exist"));
     }
 
-    public Transaction withdraw(Long cardId, Long amount, String orderId) throws CardException {
-        final var card = findById(cardId);
-        return transactionService.deposit(card.getAccount(), amount, TransactionType.VIRTUAL_CARD_WITHDRAW, orderId, card);
+    public Transaction withdraw(CardTransactionDto transactionDto) throws CardException {
+        final var card = findById(transactionDto.getCardId());
+        return transactionService.deposit(card.getAccount(), transactionDto.getAmount(),
+                TransactionType.VIRTUAL_CARD_WITHDRAW, transactionDto.getOrderId(), card);
     }
 }

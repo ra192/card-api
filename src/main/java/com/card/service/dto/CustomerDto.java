@@ -22,7 +22,7 @@ public class CustomerDto {
     @NotEmpty(message = "last name is required")
     private String lastName;
 
-    @NotEmpty(message = "birth date is required")
+    @NotNull(message = "birth date is required")
     private LocalDate birthDate;
 
     @NotEmpty(message = "address is required")

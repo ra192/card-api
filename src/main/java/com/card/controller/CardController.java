@@ -25,12 +25,12 @@ public class CardController extends BaseController {
         return cardService.createVirtual(createDto);
     }
 
-    @GetMapping("/deposit")
+    @PostMapping("/deposit")
     public Transaction deposit(@RequestBody CardTransactionDto transactionDto) throws TransactionException, CardException {
         return cardService.deposit(transactionDto);
     }
 
-    @GetMapping("/withdraw")
+    @PostMapping("/withdraw")
     public Transaction withdraw(@RequestBody CardTransactionDto transactionDto) throws CardException {
         return cardService.withdraw(transactionDto);
     }

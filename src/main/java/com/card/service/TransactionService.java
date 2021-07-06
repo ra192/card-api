@@ -38,7 +38,7 @@ public class TransactionService {
     }
 
     public Transaction withdraw(Account account, Long amount, TransactionType type, String orderId, Card card) throws TransactionException {
-        if (transactionItemRepository.sumByAccount(account) - amount < 0)
+        if (sumByAccount(account) - amount < 0)
             throw new TransactionException("Account does not have enough funds");
 
         return createTransactionWithItems(account, -amount, type, TransactionItemType.WITHDRAW, orderId, card);
@@ -57,5 +57,10 @@ public class TransactionService {
         log.info("{} transaction was created", type);
 
         return transaction;
+    }
+
+    private long sumByAccount(Account account) {
+        final Long sum = transactionItemRepository.sumByAccount(account);
+        return (sum != null) ? sum : 0L;
     }
 }

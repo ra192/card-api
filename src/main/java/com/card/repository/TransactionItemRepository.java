@@ -7,5 +7,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TransactionItemRepository extends CrudRepository<TransactionItem, Long> {
     @Query("select sum (itm.amount) from TransactionItem itm where itm.account = ?1")
-    Long sumByAccount(Account accountId);
+    Long sumByAccount(Account account);
 }

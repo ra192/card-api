@@ -2,6 +2,7 @@ package com.card.controller;
 
 import com.card.entity.Customer;
 import com.card.service.CustomerService;
+import com.card.service.dto.CreateCustomerDto;
 import com.card.service.dto.CustomerDto;
 import com.card.service.exception.CustomerException;
 import com.card.service.exception.MerchantException;
@@ -25,7 +26,7 @@ public class CustomerController extends BaseController {
 
     @Operation(summary = "Register customer")
     @PostMapping("/register")
-    public Customer register(@RequestBody @Valid CustomerDto customerDto) throws MerchantException, CustomerException {
-        return customerService.create(customerDto);
+    public CustomerDto register(@RequestBody @Valid CreateCustomerDto createCustomerDto) throws MerchantException, CustomerException {
+        return customerService.create(createCustomerDto);
     }
 }

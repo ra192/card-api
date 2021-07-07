@@ -1,28 +1,53 @@
 package com.card.service.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class CustomerDto {
-    private Long id;
+@SuppressWarnings("unused")
+public class CreateCustomerDto {
+    @NotNull(message = "merchant id is required")
+    private Long merchantId;
+
+    @NotEmpty(message = "phone is required")
     private String phone;
+
+    @Email(message = "email is not valid")
     private String email;
-    private Boolean active;
+
+    @NotEmpty(message = "first name is required")
     private String firstName;
+
+    @NotEmpty(message = "last name is required")
     private String lastName;
+
+    @NotNull(message = "birth date is required")
     private LocalDate birthDate;
+
+    @NotEmpty(message = "address is required")
     private String address;
+
     private String address2;
+
+    @NotEmpty(message = "city is required")
     private String city;
+
+    @NotEmpty(message = "state region is required")
     private String stateRegion;
+
+    @NotEmpty(message = "country is required")
     private String country;
+
+    @NotEmpty(message = "postal code is required")
     private String postalCode;
 
-    public Long getId() {
-        return id;
+    public Long getMerchantId() {
+        return merchantId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 
     public String getPhone() {
@@ -39,14 +64,6 @@ public class CustomerDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
     public String getFirstName() {
@@ -119,5 +136,22 @@ public class CustomerDto {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerDto{" + "merchantId=" + merchantId +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate='" + birthDate + '\'' +
+                ", address='" + address + '\'' +
+                ", address2='" + address2 + '\'' +
+                ", city='" + city + '\'' +
+                ", stateRegion='" + stateRegion + '\'' +
+                ", country='" + country + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

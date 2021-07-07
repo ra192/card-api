@@ -1,10 +1,12 @@
 package com.card.service.dto;
 
+import com.card.entity.enums.TransactionStatus;
+
 public class TransactionDto {
     private final Long id;
-    private final String status;
+    private final TransactionStatus status;
 
-    public TransactionDto(Long id, String status) {
+    public TransactionDto(Long id, TransactionStatus status) {
         this.id = id;
         this.status = status;
     }
@@ -13,7 +15,7 @@ public class TransactionDto {
         return id;
     }
 
-    public String getStatus() {
+    public TransactionStatus getStatus() {
         return status;
     }
 }

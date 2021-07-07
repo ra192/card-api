@@ -2,6 +2,7 @@ package com.card.service;
 
 import com.card.entity.Customer;
 import com.card.repository.CustomerRepository;
+import com.card.service.dto.CreateCustomerDto;
 import com.card.service.dto.CustomerDto;
 import com.card.service.exception.CustomerException;
 import com.card.service.exception.MerchantException;
@@ -23,21 +24,24 @@ public class CustomerService {
         this.merchantService = merchantService;
     }
 
-    public Customer create(CustomerDto customerDto) throws CustomerException, MerchantException {
+    public CustomerDto create(CreateCustomerDto createCustomerDto) throws CustomerException, MerchantException {
         logger.info("Create customer method was called with args:");
-        logger.info(customerDto.toString());
+        logger.info(createCustomerDto.toString());
 
-        final var merchant = merchantService.getById(customerDto.getMerchantId());
+        final var merchant = merchantService.getById(createCustomerDto.getMerchantId());
 
-        if (customerRepository.findByPhoneAndMerchant(customerDto.getPhone(), merchant).isPresent())
+        if (customerRepository.findByPhoneAndMerchant(createCustomerDto.getPhone(), merchant).isPresent())
             throw new CustomerException("Customer already exists");
 
         final var customer = new Customer();
-        BeanUtils.copyProperties(customerDto, customer);
+        BeanUtils.copyProperties(createCustomerDto, customer);
         customer.setActive(true);
         customer.setMerchant(merchant);
 
-        return customerRepository.save(customer);
+        final var dbCustomer = customerRepository.save(customer);
+        final var customerDto = new CustomerDto();
+        BeanUtils.copyProperties(dbCustomer,customerDto);
+        return customerDto;
     }
 
     public Customer findActiveById(Long id) throws CustomerException {

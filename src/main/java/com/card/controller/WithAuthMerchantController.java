@@ -5,11 +5,15 @@ import com.card.service.MerchantService;
 import com.card.service.TokenService;
 import com.card.service.exception.TokenException;
 import com.card.service.exception.MerchantException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
 public abstract class WithAuthMerchantController extends BaseController {
+    private static final Logger logger = LoggerFactory.getLogger(WithAuthMerchantController.class);
+
     private final TokenService tokenService;
     private final MerchantService merchantService;
 
@@ -19,6 +23,7 @@ public abstract class WithAuthMerchantController extends BaseController {
     }
 
     protected Merchant validateToken(String authHeader) throws TokenException, MerchantException {
+        logger.info("Authorization header: {}", authHeader);
         final var token = StringUtils.replace(authHeader, "Bearer", "").trim();
         return merchantService.getById(tokenService.validateToken(token).getMerchantId());
     }

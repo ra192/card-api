@@ -29,22 +29,20 @@ public class CardService {
         card.setInfo("xxxx");
         card.setCreated(LocalDateTime.now());
         cardRepository.save(card);
-        logger.info("Card was created:");
-        logger.info(card.toString());
-
+        logger.info("Card was created with id: {}", card.getId());
     }
 
     public Transaction deposit(Card card, Long amount, String orderId) throws CardException, TransactionException {
-        return transactionService.withdraw(card.getAccount(),amount,
+        return transactionService.withdraw(card.getAccount(), amount,
                 TransactionType.VIRTUAL_CARD_DEPOSIT, orderId, card);
     }
 
     public Card findById(Long id) throws CardException {
-        return cardRepository.findById(id).orElseThrow(()->new CardException("Card does not exist"));
+        return cardRepository.findById(id).orElseThrow(() -> new CardException("Card does not exist"));
     }
 
     public Transaction withdraw(Card card, Long amount, String orderId) throws CardException {
-       return transactionService.deposit(card.getAccount(), amount,
+        return transactionService.deposit(card.getAccount(), amount,
                 TransactionType.VIRTUAL_CARD_WITHDRAW, orderId, card);
     }
 }

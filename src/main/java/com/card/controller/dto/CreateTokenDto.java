@@ -19,4 +19,12 @@ public class CreateTokenDto {
     public void setSecret(String secret) {
         this.secret = secret;
     }
+
+    @Override
+    public String toString() {
+        return "CreateTokenDto{" +
+                "merchantId=" + merchantId +
+                ", secret='" + secret + '\'' +
+                '}';
+    }
 }

@@ -4,6 +4,8 @@ import com.card.entity.Merchant;
 import com.card.service.data.Token;
 import com.card.service.exception.TokenException;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -17,6 +19,8 @@ import java.util.Base64;
 
 @Service
 public class TokenService {
+    private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
+
     private final Cache cache;
 
     private final int tokenSize;
@@ -39,6 +43,8 @@ public class TokenService {
 
         final var token = new Token(tokenStr, merchant.getId(), LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes));
         cache.put(tokenStr, token);
+
+        logger.info("Token was created");
 
         return token;
     }

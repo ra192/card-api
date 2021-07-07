@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomerService {
-    private static final Logger logger= LoggerFactory.getLogger(CustomerService.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerService.class);
 
     private final CustomerRepository customerRepository;
 
@@ -18,11 +18,10 @@ public class CustomerService {
     }
 
     public void create(Customer customer) throws CustomerException {
-        if(customerRepository.findByPhoneAndMerchant(customer.getPhone(), customer.getMerchant()).isPresent())
+        if (customerRepository.findByPhoneAndMerchant(customer.getPhone(), customer.getMerchant()).isPresent())
             throw new CustomerException("Customer already exists");
         customerRepository.save(customer);
-        logger.info("Customer was created:");
-        logger.info(customer.toString());
+        logger.info("Customer was created with id: {}", customer.getId());
     }
 
     public Customer findActiveById(Long id) throws CustomerException {

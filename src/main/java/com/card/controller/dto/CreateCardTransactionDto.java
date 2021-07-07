@@ -33,4 +33,13 @@ public class CreateCardTransactionDto {
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
+
+    @Override
+    public String toString() {
+        return "CreateCardTransactionDto{" +
+                "cardId=" + cardId +
+                ", amount=" + amount +
+                ", orderId='" + orderId + '\'' +
+                '}';
+    }
 }

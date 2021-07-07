@@ -41,7 +41,7 @@ public class TokenService {
         final var tokenStr = RandomStringUtils.randomAlphanumeric(tokenSize);
         final var expiredAt = LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes);
 
-        final var token = new Token(tokenStr, merchant.getId(), LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes));
+        final var token = new Token(tokenStr, merchant.getId(), expiredAt);
         cache.put(tokenStr, token);
 
         logger.info("Token was created");

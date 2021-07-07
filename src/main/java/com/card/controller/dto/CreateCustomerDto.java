@@ -7,9 +7,6 @@ import java.time.LocalDate;
 
 @SuppressWarnings("unused")
 public class CreateCustomerDto {
-    @NotNull(message = "merchant id is required")
-    private Long merchantId;
-
     @NotEmpty(message = "phone is required")
     private String phone;
 
@@ -41,14 +38,6 @@ public class CreateCustomerDto {
 
     @NotEmpty(message = "postal code is required")
     private String postalCode;
-
-    public Long getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(Long merchantId) {
-        this.merchantId = merchantId;
-    }
 
     public String getPhone() {
         return phone;
@@ -140,8 +129,7 @@ public class CreateCustomerDto {
 
     @Override
     public String toString() {
-        return "CustomerDto{" + "merchantId=" + merchantId +
-                ", phone='" + phone + '\'' +
+        return "CustomerDto{ phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

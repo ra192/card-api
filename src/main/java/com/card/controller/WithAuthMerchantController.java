@@ -25,6 +25,6 @@ public abstract class WithAuthMerchantController extends BaseController {
     protected Merchant validateToken(String authHeader) throws TokenException, MerchantException {
         logger.info("Authorization header: {}", authHeader);
         final var token = StringUtils.replace(authHeader, "Bearer", "").trim();
-        return merchantService.getById(tokenService.validateToken(token).getMerchantId());
+        return merchantService.getById(tokenService.validate(token).getMerchantId());
     }
 }

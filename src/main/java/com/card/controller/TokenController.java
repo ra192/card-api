@@ -34,7 +34,7 @@ public class TokenController extends BaseController {
         logger.info("Create token method was called with params:");
         logger.info(requestObj.toString());
 
-        final var token = tokenService.createToken(merchantService.getById(requestObj.getMerchantId()), requestObj.getSecret());
+        final var token = tokenService.create(merchantService.getById(requestObj.getMerchantId()), requestObj.getSecret());
 
         return new TokenDto(token.getToken(), token.getExpiredAt());
     }

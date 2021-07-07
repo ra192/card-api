@@ -34,7 +34,7 @@ public class TokenService {
         this.tokenLifetimeInMinutes = tokenLifetimeInMinutes;
     }
 
-    public Token createToken(Merchant merchant, String secret) throws NoSuchAlgorithmException, TokenException {
+    public Token create(Merchant merchant, String secret) throws NoSuchAlgorithmException, TokenException {
         if (!merchant.getSecret().equalsIgnoreCase(sha256Hash(secret)))
             throw new TokenException("Secret is not valid");
 
@@ -49,7 +49,7 @@ public class TokenService {
         return token;
     }
 
-    public Token validateToken(String token) throws TokenException {
+    public Token validate(String token) throws TokenException {
         final var cacheValue = cache.get(token);
         if (cacheValue == null) throw new TokenException("Token doesn't exist");
         final var tokenObj = (Token) cacheValue.get();

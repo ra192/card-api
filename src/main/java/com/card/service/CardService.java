@@ -4,18 +4,18 @@ import com.card.entity.Card;
 import com.card.entity.Transaction;
 import com.card.entity.enums.TransactionType;
 import com.card.repository.CardRepository;
-import com.card.controller.dto.CardDto;
-import com.card.controller.dto.CreateCardTransactionDto;
-import com.card.controller.dto.CreateCardDto;
-import com.card.controller.dto.TransactionDto;
 import com.card.service.exception.CardException;
 import com.card.service.exception.TransactionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
 public class CardService {
+    private static final Logger logger = LoggerFactory.getLogger(CardService.class);
+
     private final CardRepository cardRepository;
     private final TransactionService transactionService;
 
@@ -29,6 +29,9 @@ public class CardService {
         card.setInfo("xxxx");
         card.setCreated(LocalDateTime.now());
         cardRepository.save(card);
+        logger.info("Card was created:");
+        logger.info(card.toString());
+
     }
 
     public Transaction deposit(Card card, Long amount, String orderId) throws CardException, TransactionException {

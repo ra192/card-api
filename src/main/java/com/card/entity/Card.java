@@ -95,4 +95,17 @@ public class Card implements Serializable {
     public void setInfo(String info) {
         this.info = info;
     }
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "id=" + id +
+                ", providerReferenceId='" + providerReferenceId + '\'' +
+                ", type=" + type +
+                ", customerId=" + customer.getId() +
+                ", accountId=" + account.getId() +
+                ", created=" + created +
+                ", info='" + info + '\'' +
+                '}';
+    }
 }

@@ -1,4 +1,4 @@
-package com.card.service.dto;
+package com.card.controller.dto;
 
 import com.card.entity.enums.TransactionStatus;
 

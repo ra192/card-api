@@ -6,7 +6,7 @@ import java.io.Serializable;
 @Entity
 public class Account implements Serializable {
     @Id
-    @SequenceGenerator(name = "account_id_seq")
+    @SequenceGenerator(name = "account_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "account_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

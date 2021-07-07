@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 public class Transaction implements Serializable {
     @Id
-    @SequenceGenerator(name = "transaction_id_seq")
+    @SequenceGenerator(name = "transaction_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "transaction_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

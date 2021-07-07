@@ -1,4 +1,4 @@
-package com.card.service.dto;
+package com.card.controller.dto;
 
 import com.card.entity.enums.CardType;
 
@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 public class CardDto {
     private Long id;
-    private String providerReferenceId;
     private CardType type;
     private LocalDateTime created;
     private String info;
@@ -17,14 +16,6 @@ public class CardDto {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getProviderReferenceId() {
-        return providerReferenceId;
-    }
-
-    public void setProviderReferenceId(String providerReferenceId) {
-        this.providerReferenceId = providerReferenceId;
     }
 
     public CardType getType() {

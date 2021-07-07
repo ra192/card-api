@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Entity
 public class Customer implements Serializable {
     @Id
-    @SequenceGenerator(name = "customer_id_seq")
+    @SequenceGenerator(name = "customer_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "customer_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Card implements Serializable {
     @Id
-    @SequenceGenerator(name = "card_id_seq")
+    @SequenceGenerator(name = "card_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "card_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -30,6 +30,15 @@ public class Card implements Serializable {
 
     @Column
     private String info;
+
+    public Card() {
+    }
+
+    public Card(CardType type, Customer customer, Account account) {
+        this.type = type;
+        this.customer = customer;
+        this.account = account;
+    }
 
     public Long getId() {
         return id;

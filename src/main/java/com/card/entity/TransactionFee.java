@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Entity
 public class TransactionFee implements Serializable {
     @Id
-    @SequenceGenerator(name = "transaction_fee_id_seq")
+    @SequenceGenerator(name = "transaction_fee_id_seq", allocationSize = 1)
     @GeneratedValue(generator = "transaction_fee_id_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

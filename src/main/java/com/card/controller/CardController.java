@@ -1,10 +1,10 @@
 package com.card.controller;
 
 import com.card.entity.Card;
-import com.card.entity.Transaction;
 import com.card.service.CardService;
 import com.card.service.dto.CardTransactionDto;
 import com.card.service.dto.CreateCardDto;
+import com.card.service.dto.TransactionDto;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.CardException;
 import com.card.service.exception.CustomerException;
@@ -26,12 +26,12 @@ public class CardController extends BaseController {
     }
 
     @PostMapping("/deposit")
-    public Transaction deposit(@RequestBody CardTransactionDto transactionDto) throws TransactionException, CardException {
+    public TransactionDto deposit(@RequestBody CardTransactionDto transactionDto) throws TransactionException, CardException {
         return cardService.deposit(transactionDto);
     }
 
     @PostMapping("/withdraw")
-    public Transaction withdraw(@RequestBody CardTransactionDto transactionDto) throws CardException {
+    public TransactionDto withdraw(@RequestBody CardTransactionDto transactionDto) throws CardException {
         return cardService.withdraw(transactionDto);
     }
 }

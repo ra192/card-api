@@ -7,6 +7,7 @@ import com.card.entity.enums.TransactionType;
 import com.card.repository.CardRepository;
 import com.card.service.dto.CardTransactionDto;
 import com.card.service.dto.CreateCardDto;
+import com.card.service.dto.TransactionDto;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.CardException;
 import com.card.service.exception.CustomerException;
@@ -14,7 +15,6 @@ import com.card.service.exception.TransactionException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 public class CardService {
@@ -48,19 +48,21 @@ public class CardService {
         return card;
     }
 
-    public Transaction deposit(CardTransactionDto transactionDto) throws CardException, TransactionException {
+    public TransactionDto deposit(CardTransactionDto transactionDto) throws CardException, TransactionException {
         final var card = findById(transactionDto.getCardId());
-        return transactionService.withdraw(card.getAccount(), transactionDto.getAmount(),
+        final Transaction transaction = transactionService.withdraw(card.getAccount(), transactionDto.getAmount(),
                 TransactionType.VIRTUAL_CARD_DEPOSIT, transactionDto.getOrderId(), card);
+        return new TransactionDto(transaction.getId(), transaction.getStatus().name());
     }
 
     public Card findById(Long id) throws CardException {
         return cardRepository.findById(id).orElseThrow(()->new CardException("Card does not exist"));
     }
 
-    public Transaction withdraw(CardTransactionDto transactionDto) throws CardException {
+    public TransactionDto withdraw(CardTransactionDto transactionDto) throws CardException {
         final var card = findById(transactionDto.getCardId());
-        return transactionService.deposit(card.getAccount(), transactionDto.getAmount(),
+        final Transaction transaction = transactionService.deposit(card.getAccount(), transactionDto.getAmount(),
                 TransactionType.VIRTUAL_CARD_WITHDRAW, transactionDto.getOrderId(), card);
+        return new TransactionDto(transaction.getId(), transaction.getStatus().name());
     }
 }

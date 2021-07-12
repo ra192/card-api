@@ -60,7 +60,6 @@ public class TransactionService {
     }
 
     private long sumByAccount(Account account) {
-        final Long sum = transactionItemRepository.sumByAccount(account);
-        return (sum != null) ? sum : 0L;
+        return transactionItemRepository.findSumAmountByAccount(account).orElse(0L);
     }
 }

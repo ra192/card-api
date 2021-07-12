@@ -1,7 +1,12 @@
 package com.card.controller.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class CreateTokenDto {
+    @NotNull
     private Long merchantId;
+    @NotEmpty
     private String secret;
 
     public Long getMerchantId() {

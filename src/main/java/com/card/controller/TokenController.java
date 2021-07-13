@@ -37,6 +37,6 @@ public class TokenController extends BaseController {
 
         final var token = tokenService.create(merchantService.getById(requestObj.getMerchantId()), requestObj.getSecret());
 
-        return new TokenDto(token, LocalDateTime.now());
+        return new TokenDto(token);
     }
 }

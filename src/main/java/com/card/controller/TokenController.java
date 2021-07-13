@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/token")
@@ -36,6 +37,6 @@ public class TokenController extends BaseController {
 
         final var token = tokenService.create(merchantService.getById(requestObj.getMerchantId()), requestObj.getSecret());
 
-        return new TokenDto(token.getToken(), token.getExpiredAt());
+        return new TokenDto(token, LocalDateTime.now());
     }
 }

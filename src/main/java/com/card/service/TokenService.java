@@ -1,63 +1,57 @@
 package com.card.service;
 
 import com.card.entity.Merchant;
-import com.card.service.data.Token;
 import com.card.service.exception.TokenException;
-import org.apache.commons.lang3.RandomStringUtils;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Base64;
+import java.util.Date;
 
 @Service
 public class TokenService {
     private static final Logger logger = LoggerFactory.getLogger(TokenService.class);
 
-    private final Cache cache;
+    private final String jwtSecretKey;
+    private final Long expirationInMinutes;
 
-    private final int tokenSize;
-    private final long tokenLifetimeInMinutes;
-
-    public TokenService(CacheManager cacheManager,
-                        @Value("${com.card.auth.token.size}") int tokenSize,
-                        @Value("${com.card.auth.liftime.minutes}") long tokenLifetimeInMinutes) {
-        this.cache = cacheManager.getCache("tokens");
-        this.tokenSize = tokenSize;
-        this.tokenLifetimeInMinutes = tokenLifetimeInMinutes;
+    public TokenService(@Value("${com.card.auth.jwt.secret}") String jwtSecretKey,
+                        @Value("${com.card.auth.jwt.expiration.minutes}") Long expirationInMinutes) {
+        this.jwtSecretKey = jwtSecretKey;
+        this.expirationInMinutes = expirationInMinutes;
     }
 
-    public Token create(Merchant merchant, String secret) throws NoSuchAlgorithmException, TokenException {
+    public String create(Merchant merchant, String secret) throws TokenException, NoSuchAlgorithmException {
         if (!merchant.getSecret().equalsIgnoreCase(sha256Hash(secret)))
             throw new TokenException("Secret is not valid");
-
-        final var tokenStr = RandomStringUtils.randomAlphanumeric(tokenSize);
-        final var expiredAt = LocalDateTime.now().plusMinutes(tokenLifetimeInMinutes);
-
-        final var token = new Token(tokenStr, merchant.getId(), expiredAt);
-        cache.put(tokenStr, token);
+        final var token = Jwts.builder().setSubject(String.valueOf(merchant.getId()))
+                .setExpiration(Date.from(LocalDateTime.now().plusMinutes(expirationInMinutes)
+                        .atZone(ZoneId.systemDefault()).toInstant()))
+                .signWith(getSecret()).compact();
 
         logger.info("Token was created");
 
         return token;
     }
 
-    public Token validate(String token) throws TokenException {
-        final var cacheValue = cache.get(token);
-        if (cacheValue == null) throw new TokenException("Token doesn't exist");
-        final var tokenObj = (Token) cacheValue.get();
+    public Long validate(String token) {
+        final var claimsJws = Jwts.parserBuilder().setSigningKey(getSecret()).build().parseClaimsJws(token);
 
-        assert tokenObj != null;
-        if (LocalDateTime.now().isAfter(tokenObj.getExpiredAt())) throw new TokenException("Token is expired");
+        return Long.valueOf(claimsJws.getBody().getSubject());
+    }
 
-        return tokenObj;
+    private SecretKey getSecret() {
+        return Keys.hmacShaKeyFor(jwtSecretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     private String sha256Hash(String text) throws NoSuchAlgorithmException {

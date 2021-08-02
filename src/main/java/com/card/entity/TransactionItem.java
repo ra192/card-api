@@ -1,7 +1,5 @@
 package com.card.entity;
 
-import com.card.entity.enums.TransactionItemType;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,24 +15,25 @@ public class TransactionItem implements Serializable {
     private Long amount;
 
     @ManyToOne
-    private Account account;
+    private Account srcAccount;
+
+    @ManyToOne
+    private Account destAccount;
 
     @Column(nullable = false)
     private LocalDateTime created;
-
-    @Enumerated(EnumType.STRING)
-    private TransactionItemType type;
 
     @ManyToOne
     private Card card;
 
     public TransactionItem() {
     }
-    public TransactionItem(Long amount, Account account, TransactionItemType type, Card card) {
+
+    public TransactionItem(Long amount, Account srcAccount, Account destAccount, Card card) {
         this.amount = amount;
-        this.account = account;
+        this.srcAccount = srcAccount;
+        this.destAccount=destAccount;
         this.created = LocalDateTime.now();
-        this.type = type;
         this.card = card;
     }
 
@@ -46,6 +45,30 @@ public class TransactionItem implements Serializable {
         this.amount = amount;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Account getSrcAccount() {
+        return srcAccount;
+    }
+
+    public void setSrcAccount(Account srcAccount) {
+        this.srcAccount = srcAccount;
+    }
+
+    public Account getDestAccount() {
+        return destAccount;
+    }
+
+    public void setDestAccount(Account destAccount) {
+        this.destAccount = destAccount;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
@@ -54,19 +77,13 @@ public class TransactionItem implements Serializable {
         this.created = created;
     }
 
-    public TransactionItemType getType() {
-        return type;
-    }
-
-    public void setType(TransactionItemType type) {
-        this.type = type;
-    }
-
     public Card getCard() {
         return card;
     }
 
-    public void setCard(Card card) {
+    public void setSrcCard(Card card) {
         this.card = card;
     }
+
+
 }

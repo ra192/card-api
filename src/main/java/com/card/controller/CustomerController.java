@@ -1,12 +1,11 @@
 package com.card.controller;
 
+import com.card.controller.dto.CreateCustomerDto;
+import com.card.controller.dto.CustomerDto;
 import com.card.entity.Customer;
 import com.card.service.CustomerService;
 import com.card.service.MerchantService;
-import com.card.controller.dto.CreateCustomerDto;
-import com.card.controller.dto.CustomerDto;
 import com.card.service.TokenService;
-import com.card.service.exception.TokenException;
 import com.card.service.exception.CustomerException;
 import com.card.service.exception.MerchantException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +31,7 @@ public class CustomerController extends WithAuthMerchantController {
 
     @Operation(summary = "Register customer")
     @PostMapping
-    public CustomerDto create(@RequestHeader String authorization, @RequestBody @Valid CreateCustomerDto requestObject) throws MerchantException, CustomerException, TokenException {
+    public CustomerDto create(@RequestHeader String authorization, @RequestBody @Valid CreateCustomerDto requestObject) throws MerchantException, CustomerException {
         logger.info("Create customer method wath called with params:");
         logger.info(requestObject.toString());
 

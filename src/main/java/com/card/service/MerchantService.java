@@ -15,7 +15,7 @@ public class MerchantService {
         this.merchantRepository = merchantRepository;
     }
 
-    public Merchant getById(Long id) throws MerchantException {
+    public Merchant findById(Long id) throws MerchantException {
         return merchantRepository.findById(id).orElseThrow(()->new MerchantException("Merchant does not exist"));
     }
 }

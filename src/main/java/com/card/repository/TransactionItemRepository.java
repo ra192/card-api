@@ -7,5 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface TransactionItemRepository extends CrudRepository<TransactionItem, Long> {
-    Optional<Long> findSumAmountByAccount(Account account);
+    Optional<Long> findSumAmountBySrcAccount(Account account);
+    Optional<Long> findSumAmountByDestAccount(Account account);
 }

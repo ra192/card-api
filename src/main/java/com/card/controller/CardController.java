@@ -1,7 +1,6 @@
 package com.card.controller;
 
 import com.card.entity.Card;
-import com.card.entity.Merchant;
 import com.card.entity.enums.CardType;
 import com.card.service.*;
 import com.card.controller.dto.CardDto;
@@ -33,7 +32,7 @@ public class CardController extends WithAuthMerchantController {
 
     @PostMapping
     public CardDto createVirtual(@RequestHeader String authorization, @RequestBody CreateCardDto requestObject)
-            throws CustomerException, AccountException, MerchantException, TokenException {
+            throws CustomerException, AccountException, MerchantException {
         logger.info("Create virtual card method was called with params:");
         logger.info(requestObject.toString());
 
@@ -50,7 +49,7 @@ public class CardController extends WithAuthMerchantController {
 
     @PostMapping("/deposit")
     public TransactionDto deposit(@RequestHeader String authorization, @RequestBody CreateCardTransactionDto requestObject)
-            throws TransactionException, CardException, MerchantException, TokenException {
+            throws TransactionException, CardException, MerchantException, AccountException {
         logger.info("Card deposit method was called with params:");
         logger.info(requestObject.toString());
 
@@ -63,7 +62,7 @@ public class CardController extends WithAuthMerchantController {
 
     @PostMapping("/withdraw")
     public TransactionDto withdraw(@RequestHeader String authorization, @RequestBody CreateCardTransactionDto requestObject)
-            throws CardException, MerchantException, TokenException {
+            throws CardException, MerchantException, AccountException {
         logger.info("Card withdraw method was called with params:");
         logger.info(requestObject.toString());
 

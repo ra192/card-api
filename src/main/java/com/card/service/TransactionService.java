@@ -4,7 +4,6 @@ import com.card.entity.Account;
 import com.card.entity.Card;
 import com.card.entity.Transaction;
 import com.card.entity.TransactionItem;
-import com.card.entity.enums.TransactionItemType;
 import com.card.entity.enums.TransactionStatus;
 import com.card.entity.enums.TransactionType;
 import com.card.repository.TransactionFeeRepository;
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -33,33 +33,45 @@ public class TransactionService {
         this.transactionFeeRepository = transactionFeeRepository;
     }
 
-    public Transaction deposit(Account account, Long amount, TransactionType type, String orderId, Card card) {
-        return createTransactionWithItems(account, amount, type, TransactionItemType.DEPOSIT, orderId, card);
+    public Transaction deposit(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
+                               TransactionType type, String orderId, Card card) {
+        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, createFeeItem(destAccount,
+                feeAccount, amount, type));
     }
 
-    public Transaction withdraw(Account account, Long amount, TransactionType type, String orderId, Card card) throws TransactionException {
-        if (sumByAccount(account) - amount < 0)
-            throw new TransactionException("Account does not have enough funds");
-
-        return createTransactionWithItems(account, -amount, type, TransactionItemType.WITHDRAW, orderId, card);
+    public Transaction withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
+                                TransactionType type, String orderId, Card card) throws TransactionException {
+        if (sumByAccount(srcAccount) - amount < 0)
+            throw new TransactionException("Source account does not have enough funds");
+        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, createFeeItem(srcAccount,
+                feeAccount, amount, type));
     }
 
-    private Transaction createTransactionWithItems(Account account, Long amount, TransactionType type,
-                                                   TransactionItemType baseItemType, String orderId, Card card) {
+    private Transaction createTransaction(Account srcAccount, Account destAccount, Long amount, TransactionType type,
+                                          String orderId, Card card, Optional<TransactionItem> feeItem) {
+
+
         final var items = new ArrayList<TransactionItem>();
-        items.add(new TransactionItem(amount, account, baseItemType, card));
+        items.add(new TransactionItem(amount, srcAccount, destAccount, card));
 
-        transactionFeeRepository.findByTypeAndAccount(type, account).ifPresent(fee ->
-                items.add(new TransactionItem((amount > 0) ? -amount : amount * fee.getRate().longValue(), account, TransactionItemType.FEE, null)));
+        feeItem.ifPresent(items::add);
 
-        final var transaction = transactionRepository.save(new Transaction(orderId, type, TransactionStatus.COMPLETED, items));
+        final var transaction = new Transaction(orderId, type, TransactionStatus.COMPLETED, items);
+        transactionRepository.save(transaction);
 
-        log.info("{} transaction was created", type);
+        log.info("{} transactions was created", type);
 
         return transaction;
     }
 
+    private Optional<TransactionItem> createFeeItem(Account srcAccount, Account destAccount, Long amount, TransactionType type) {
+        return transactionFeeRepository.findByTypeAndAccount(type, srcAccount)
+                .map(fee -> new TransactionItem(amount * fee.getRate().longValue(),
+                        srcAccount, destAccount, null));
+    }
+
     private long sumByAccount(Account account) {
-        return transactionItemRepository.findSumAmountByAccount(account).orElse(0L);
+        return transactionItemRepository.findSumAmountByDestAccount(account).orElse(0L)
+                - transactionItemRepository.findSumAmountBySrcAccount(account).orElse(0L);
     }
 }

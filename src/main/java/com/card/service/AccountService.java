@@ -26,7 +26,7 @@ public class AccountService {
     }
 
     public Transaction fund(Account account, Long amount, String orderId) throws AccountException, TransactionException {
-        return transactionService.fund(getCashAccount(), account, amount, TransactionType.TOPUP, orderId);
+        return transactionService.fund(getCashAccount(), account, amount, TransactionType.FUND, orderId);
     }
 
     private Account getCashAccount() throws AccountException {

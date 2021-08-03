@@ -74,10 +74,10 @@ public class TransactionService {
         return transaction;
     }
 
-    private Optional<TransactionItem> createFeeItem(Account srcAccount, Account destAccount, Long amount, TransactionType type) {
-        return transactionFeeRepository.findByTypeAndAccount(type, srcAccount)
+    private Optional<TransactionItem> createFeeItem(Account account, Account destFeeAccount, Long amount, TransactionType type) {
+        return transactionFeeRepository.findByTypeAndAccount(type, account)
                 .map(fee -> new TransactionItem(amount * fee.getRate().longValue(),
-                        srcAccount, destAccount, null));
+                        account, destFeeAccount, null));
     }
 
     private long sumByAccount(Account account) {

@@ -34,23 +34,30 @@ public class TransactionService {
     }
 
     public Transaction deposit(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
-                               TransactionType type, String orderId, Card card) {
-        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, createFeeItem(destAccount,
-                feeAccount, amount, type));
+                               TransactionType type, String orderId, Card card) throws TransactionException {
+        final var feeItem = createFeeItem(destAccount,
+                feeAccount, amount, type);
+        if (sumByAccount(srcAccount) - amount < 0)
+            throw new TransactionException("Source account does not have enough funds");
+
+        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, feeItem);
+    }
+
+    public Transaction topup(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) {
+        return createTransaction(srcAccount,destAccount,amount,type,orderId,null, Optional.empty());
     }
 
     public Transaction withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
                                 TransactionType type, String orderId, Card card) throws TransactionException {
-        if (sumByAccount(srcAccount) - amount < 0)
+        final var feeItem = createFeeItem(srcAccount,
+                feeAccount, amount, type);
+        if (sumByAccount(srcAccount) - amount - feeItem.map(TransactionItem::getAmount).orElse(0L) < 0)
             throw new TransactionException("Source account does not have enough funds");
-        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, createFeeItem(srcAccount,
-                feeAccount, amount, type));
+        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, feeItem);
     }
 
     private Transaction createTransaction(Account srcAccount, Account destAccount, Long amount, TransactionType type,
                                           String orderId, Card card, Optional<TransactionItem> feeItem) {
-
-
         final var items = new ArrayList<TransactionItem>();
         items.add(new TransactionItem(amount, srcAccount, destAccount, card));
 

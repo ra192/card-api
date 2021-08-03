@@ -32,7 +32,7 @@ public class TransactionService {
 
     public Transaction deposit(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
                                TransactionType type, String orderId, Card card) throws TransactionException {
-        final var feeAmount = calculateFeeAmount(amount, type, destAccount);
+        final var feeAmount = calculateFee(amount, type, destAccount);
         if (sumByAccount(srcAccount) - amount < 0)
             throw new TransactionException("Source account does not have enough funds");
 
@@ -49,7 +49,7 @@ public class TransactionService {
 
     public Transaction withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
                                 TransactionType type, String orderId, Card card) throws TransactionException {
-        final var feeAmount = calculateFeeAmount(amount, type, srcAccount);
+        final var feeAmount = calculateFee(amount, type, srcAccount);
         if (sumByAccount(srcAccount) - amount - feeAmount < 0)
             throw new TransactionException("Source account does not have enough funds");
 
@@ -78,7 +78,7 @@ public class TransactionService {
                 - transactionItemRepository.findSumAmountBySrcAccount(account).orElse(0L);
     }
 
-    private long calculateFeeAmount(Long amount, TransactionType type, Account account) {
+    private long calculateFee(Long amount, TransactionType type, Account account) {
         return transactionFeeRepository.findByTypeAndAccount(type, account)
                 .map(fee -> amount * fee.getRate().longValue()).orElse(0L);
     }

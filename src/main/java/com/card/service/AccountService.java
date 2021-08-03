@@ -20,13 +20,13 @@ public class AccountService {
         this.transactionService = transactionService;
     }
 
-    public Transaction fund(Account account, Long amount, String orderId) throws AccountException, TransactionException {
-        return transactionService.fund(getCashAccount(), account, amount, TransactionType.TOPUP, orderId);
-    }
-
     public Account findActiveById(Long id) throws AccountException {
         return accountRepository.findByIdAndActive(id, true)
                 .orElseThrow(() -> new AccountException("Account does not exist"));
+    }
+
+    public Transaction fund(Account account, Long amount, String orderId) throws AccountException, TransactionException {
+        return transactionService.fund(getCashAccount(), account, amount, TransactionType.TOPUP, orderId);
     }
 
     private Account getCashAccount() throws AccountException {

@@ -43,7 +43,7 @@ public class TransactionService {
         return createTransaction(srcAccount, destAccount, amount, type, orderId, card, feeItem);
     }
 
-    public Transaction topup(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) {
+    public Transaction topup(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) throws TransactionException {
         return createTransaction(srcAccount,destAccount,amount,type,orderId,null, Optional.empty());
     }
 
@@ -57,7 +57,10 @@ public class TransactionService {
     }
 
     private Transaction createTransaction(Account srcAccount, Account destAccount, Long amount, TransactionType type,
-                                          String orderId, Card card, Optional<TransactionItem> feeItem) {
+                                          String orderId, Card card, Optional<TransactionItem> feeItem) throws TransactionException {
+        if(!srcAccount.getCurrency().equals(destAccount.getCurrency()))
+            throw new TransactionException("Source account currency doesn't match destination account currency");
+
         final var items = new ArrayList<TransactionItem>();
         items.add(new TransactionItem(amount, srcAccount, destAccount, card));
 

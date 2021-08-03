@@ -5,6 +5,7 @@ import com.card.entity.Transaction;
 import com.card.entity.enums.TransactionType;
 import com.card.repository.AccountRepository;
 import com.card.service.exception.AccountException;
+import com.card.service.exception.TransactionException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +20,7 @@ public class AccountService {
         this.transactionService = transactionService;
     }
 
-    public Transaction topup(Account account, Long amount, String orderId) throws AccountException {
+    public Transaction topup(Account account, Long amount, String orderId) throws AccountException, TransactionException {
         return transactionService.topup(getCashAccount(), account, amount, TransactionType.TOPUP, orderId);
     }
 

@@ -7,6 +7,7 @@ import com.card.service.MerchantService;
 import com.card.service.TokenService;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.MerchantException;
+import com.card.service.exception.TransactionException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,7 +22,8 @@ public class AccountController extends WithAuthMerchantController {
     }
 
     @PostMapping("/topup")
-    public TransactionDto topup(@RequestHeader String authorization, @RequestBody TopupDto requestObject) throws MerchantException, AccountException {
+    public TransactionDto topup(@RequestHeader String authorization, @RequestBody TopupDto requestObject)
+            throws MerchantException, AccountException, TransactionException {
         final var merchant = validateToken(authorization);
         if (!merchant.getId().equals(INTERNAL_MERCHANT_ID)) throw new MerchantException("Internal merchant required");
 

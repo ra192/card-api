@@ -1,6 +1,6 @@
 package com.card.controller.dto;
 
-public class TopupDto {
+public class FundAccountDto {
     private Long accountId;
     private Long amount;
     private String orderId;

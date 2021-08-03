@@ -21,13 +21,13 @@ public class AccountController extends WithAuthMerchantController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/topup")
-    public TransactionDto topup(@RequestHeader String authorization, @RequestBody TopupDto requestObject)
+    @PostMapping("/fund")
+    public TransactionDto fund(@RequestHeader String authorization, @RequestBody TopupDto requestObject)
             throws MerchantException, AccountException, TransactionException {
         final var merchant = validateToken(authorization);
         if (!merchant.getId().equals(INTERNAL_MERCHANT_ID)) throw new MerchantException("Internal merchant required");
 
-        final var transaction = accountService.topup(accountService.findActiveById(requestObject.getAccountId()),
+        final var transaction = accountService.fund(accountService.findActiveById(requestObject.getAccountId()),
                 requestObject.getAmount(), requestObject.getOrderId());
 
         return new TransactionDto(transaction.getId(), transaction.getStatus());

@@ -43,7 +43,7 @@ public class TransactionService {
         return transaction;
     }
 
-    public Transaction topup(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) throws TransactionException {
+    public Transaction fund(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) throws TransactionException {
         return createTransaction(srcAccount, destAccount, amount, type, orderId, null);
     }
 

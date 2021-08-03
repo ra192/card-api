@@ -20,8 +20,8 @@ public class AccountService {
         this.transactionService = transactionService;
     }
 
-    public Transaction topup(Account account, Long amount, String orderId) throws AccountException, TransactionException {
-        return transactionService.topup(getCashAccount(), account, amount, TransactionType.TOPUP, orderId);
+    public Transaction fund(Account account, Long amount, String orderId) throws AccountException, TransactionException {
+        return transactionService.fund(getCashAccount(), account, amount, TransactionType.TOPUP, orderId);
     }
 
     public Account findActiveById(Long id) throws AccountException {

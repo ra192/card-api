@@ -14,9 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 @Service
 public class TransactionService {
     private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
@@ -35,53 +32,54 @@ public class TransactionService {
 
     public Transaction deposit(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
                                TransactionType type, String orderId, Card card) throws TransactionException {
-        final var feeItem = createFeeItem(destAccount,
-                feeAccount, amount, type);
+        final var feeAmount = calculateFeeAmount(amount, type, destAccount);
         if (sumByAccount(srcAccount) - amount < 0)
             throw new TransactionException("Source account does not have enough funds");
 
-        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, feeItem);
-    }
-
-    public Transaction topup(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) throws TransactionException {
-        return createTransaction(srcAccount,destAccount,amount,type,orderId,null, Optional.empty());
-    }
-
-    public Transaction withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
-                                TransactionType type, String orderId, Card card) throws TransactionException {
-        final var feeItem = createFeeItem(srcAccount,
-                feeAccount, amount, type);
-        if (sumByAccount(srcAccount) - amount - feeItem.map(TransactionItem::getAmount).orElse(0L) < 0)
-            throw new TransactionException("Source account does not have enough funds");
-        return createTransaction(srcAccount, destAccount, amount, type, orderId, card, feeItem);
-    }
-
-    private Transaction createTransaction(Account srcAccount, Account destAccount, Long amount, TransactionType type,
-                                          String orderId, Card card, Optional<TransactionItem> feeItem) throws TransactionException {
-        if(!srcAccount.getCurrency().equals(destAccount.getCurrency()))
-            throw new TransactionException("Source account currency doesn't match destination account currency");
-
-        final var items = new ArrayList<TransactionItem>();
-        items.add(new TransactionItem(amount, srcAccount, destAccount, card));
-
-        feeItem.ifPresent(items::add);
-
-        final var transaction = new Transaction(orderId, type, TransactionStatus.COMPLETED, items);
-        transactionRepository.save(transaction);
-
-        log.info("{} transactions was created", type);
+        final var transaction = createTransaction(srcAccount, destAccount, amount, type, orderId, card);
+        if (feeAmount > 0)
+            transactionItemRepository.save(new TransactionItem(transaction, feeAmount, destAccount, feeAccount, null));
 
         return transaction;
     }
 
-    private Optional<TransactionItem> createFeeItem(Account account, Account destFeeAccount, Long amount, TransactionType type) {
-        return transactionFeeRepository.findByTypeAndAccount(type, account)
-                .map(fee -> new TransactionItem(amount * fee.getRate().longValue(),
-                        account, destFeeAccount, null));
+    public Transaction topup(Account srcAccount, Account destAccount, Long amount, TransactionType type, String orderId) throws TransactionException {
+        return createTransaction(srcAccount, destAccount, amount, type, orderId, null);
+    }
+
+    public Transaction withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
+                                TransactionType type, String orderId, Card card) throws TransactionException {
+        final var feeAmount = calculateFeeAmount(amount, type, srcAccount);
+        if (sumByAccount(srcAccount) - amount - feeAmount < 0)
+            throw new TransactionException("Source account does not have enough funds");
+
+        final var transaction = createTransaction(srcAccount, destAccount, amount, type, orderId, card);
+        if (feeAmount > 0)
+            transactionItemRepository.save(new TransactionItem(transaction, feeAmount, srcAccount, feeAccount, null));
+
+        return transaction;
+    }
+
+    private Transaction createTransaction(Account srcAccount, Account destAccount, Long amount, TransactionType type,
+                                          String orderId, Card card) throws TransactionException {
+        if (!srcAccount.getCurrency().equals(destAccount.getCurrency()))
+            throw new TransactionException("Source account currency doesn't match destination account currency");
+
+        final var transaction = transactionRepository
+                .save(new Transaction(orderId, type, TransactionStatus.COMPLETED));
+
+        transactionItemRepository.save(new TransactionItem(transaction, amount, srcAccount, destAccount, card));
+
+        return transaction;
     }
 
     private long sumByAccount(Account account) {
         return transactionItemRepository.findSumAmountByDestAccount(account).orElse(0L)
                 - transactionItemRepository.findSumAmountBySrcAccount(account).orElse(0L);
+    }
+
+    private long calculateFeeAmount(Long amount, TransactionType type, Account account) {
+        return transactionFeeRepository.findByTypeAndAccount(type, account)
+                .map(fee -> amount * fee.getRate().longValue()).orElse(0L);
     }
 }

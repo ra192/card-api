@@ -20,6 +20,9 @@ public class TransactionItem implements Serializable {
     @ManyToOne
     private Account destAccount;
 
+    @ManyToOne
+    private Transaction transaction;
+
     @Column(nullable = false)
     private LocalDateTime created;
 
@@ -29,7 +32,8 @@ public class TransactionItem implements Serializable {
     public TransactionItem() {
     }
 
-    public TransactionItem(Long amount, Account srcAccount, Account destAccount, Card card) {
+    public TransactionItem(Transaction transaction, Long amount, Account srcAccount, Account destAccount, Card card) {
+        this.transaction=transaction;
         this.amount = amount;
         this.srcAccount = srcAccount;
         this.destAccount=destAccount;

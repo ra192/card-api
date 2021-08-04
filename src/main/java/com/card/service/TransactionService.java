@@ -11,10 +11,14 @@ import com.card.repository.TransactionItemRepository;
 import com.card.repository.TransactionRepository;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.TransactionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TransactionService {
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+
     private final TransactionRepository transactionRepository;
     private final TransactionItemRepository transactionItemRepository;
     private final TransactionFeeRepository transactionFeeRepository;
@@ -43,6 +47,8 @@ public class TransactionService {
         updateBalance(destAccount, amount - feeAmount);
         if (feeAmount > 0) updateBalance(feeAccount, feeAmount);
 
+        logger.info("transaction {} was created", transaction.getType());
+
         return transaction;
     }
 
@@ -53,6 +59,8 @@ public class TransactionService {
 
         updateBalance(cashAccount, -amount);
         updateBalance(account, amount);
+
+        logger.info("transaction {} was created", transaction.getType());
 
         return transaction;
     }
@@ -67,9 +75,11 @@ public class TransactionService {
         if (feeAmount > 0)
             transactionItemRepository.save(new TransactionItem(transaction, feeAmount, srcAccount, feeAccount, null));
 
-        updateBalance(srcAccount, -amount-feeAmount);
+        updateBalance(srcAccount, -amount - feeAmount);
         updateBalance(destAccount, amount);
         if (feeAmount > 0) updateBalance(feeAccount, feeAmount);
+
+        logger.info("transaction {} was created", transaction.getType());
 
         return transaction;
     }

@@ -28,4 +28,13 @@ public class FundAccountDto {
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
+
+    @Override
+    public String toString() {
+        return "FundAccountDto{" +
+                "accountId=" + accountId +
+                ", amount=" + amount +
+                ", orderId='" + orderId + '\'' +
+                '}';
+    }
 }

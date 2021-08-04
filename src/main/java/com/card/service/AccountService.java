@@ -1,23 +1,17 @@
 package com.card.service;
 
 import com.card.entity.Account;
-import com.card.entity.Transaction;
-import com.card.entity.enums.TransactionType;
 import com.card.repository.AccountRepository;
 import com.card.service.exception.AccountException;
-import com.card.service.exception.TransactionException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
     private static final Long CASH_ACCOUNT_ID = 1L;
-
     private final AccountRepository accountRepository;
-    private final TransactionService transactionService;
 
     public AccountService(AccountRepository accountRepository, TransactionService transactionService) {
         this.accountRepository = accountRepository;
-        this.transactionService = transactionService;
     }
 
     public Account findActiveById(Long id) throws AccountException {
@@ -25,11 +19,11 @@ public class AccountService {
                 .orElseThrow(() -> new AccountException("Account does not exist"));
     }
 
-    public Transaction fund(Account account, Long amount, String orderId) throws AccountException, TransactionException {
-        return transactionService.fund(getCashAccount(), account, amount, TransactionType.FUND, orderId);
+    protected Account save(Account account) {
+        return accountRepository.save(account);
     }
 
-    private Account getCashAccount() throws AccountException {
+    protected Account getCashAccount() throws AccountException {
         return findActiveById(CASH_ACCOUNT_ID);
     }
 }

@@ -22,6 +22,8 @@ public class Account implements Serializable {
     @ManyToOne
     private Merchant merchant;
 
+    private Long balance;
+
     public Long getId() {
         return id;
     }
@@ -60,5 +62,13 @@ public class Account implements Serializable {
 
     public void setMerchant(Merchant merchant) {
         this.merchant = merchant;
+    }
+
+    public Long getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Long balance) {
+        this.balance = balance;
     }
 }

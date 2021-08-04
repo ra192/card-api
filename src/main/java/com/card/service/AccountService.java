@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
     private static final Long CASH_ACCOUNT_ID = 1L;
+
     private final AccountRepository accountRepository;
 
-    public AccountService(AccountRepository accountRepository, TransactionService transactionService) {
+    public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 

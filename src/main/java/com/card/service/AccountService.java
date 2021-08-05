@@ -20,10 +20,6 @@ public class AccountService {
                 .orElseThrow(() -> new AccountException("Account does not exist"));
     }
 
-    protected Account save(Account account) {
-        return accountRepository.save(account);
-    }
-
     protected Account getCashAccount() throws AccountException {
         return findActiveById(CASH_ACCOUNT_ID);
     }

@@ -92,7 +92,7 @@ public class TransactionService {
     }
 
     private Long sumByAccount(Account account) {
-        return transactionItemRepository.findSumAmountByDestAccount(account).orElse(0L)
-                - transactionItemRepository.findSumAmountBySrcAccount(account).orElse(0L);
+        return transactionItemRepository.sumByDestAccount(account).orElse(0L)
+                - transactionItemRepository.sumBySrcAccount(account).orElse(0L);
     }
 }

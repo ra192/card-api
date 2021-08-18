@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.card</groupId>
-    <artifactId>card-api</artifactId>
+    <artifactId>card-api-spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>card-api</name>
+    <name>card-api-spring</name>
     <description>Demo project for Spring Boot</description>
     <properties>
         <java.version>11</java.version>

@@ -27,6 +27,6 @@ class CardApiApplicationTests {
         createTokenDto.setMerchantId(1L);
         createTokenDto.setSecret("waynepass");
         mockMvc.perform(post("/api/token").contentType(MediaType.APPLICATION_JSON)
-                .content("{\"merchantId\": 1, \"secret\": \"waynepass\"}")).andDo(print());
+                .content("{\"merchantId\": 2, \"secret\": \"waynepass\"}")).andDo(print());
     }
 }

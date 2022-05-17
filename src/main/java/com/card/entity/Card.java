@@ -34,12 +34,6 @@ public class Card implements Serializable {
     public Card() {
     }
 
-    public Card(CardType type, Customer customer, Account account) {
-        this.type = type;
-        this.customer = customer;
-        this.account = account;
-    }
-
     public Long getId() {
         return id;
     }

@@ -1,12 +1,13 @@
-package com.card.controller.dto;
+package com.card.service.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@SuppressWarnings("unused")
-public class CreateCustomerDto {
+public class CustomerDTO {
+    private Long id;
+
     @NotEmpty(message = "phone is required")
     private String phone;
 
@@ -38,6 +39,16 @@ public class CreateCustomerDto {
 
     @NotEmpty(message = "postal code is required")
     private String postalCode;
+
+    private Long merchantId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getPhone() {
         return phone;
@@ -127,19 +138,11 @@ public class CreateCustomerDto {
         this.postalCode = postalCode;
     }
 
-    @Override
-    public String toString() {
-        return "CustomerDto{ phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", birthDate='" + birthDate + '\'' +
-                ", address='" + address + '\'' +
-                ", address2='" + address2 + '\'' +
-                ", city='" + city + '\'' +
-                ", stateRegion='" + stateRegion + '\'' +
-                ", country='" + country + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                '}';
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 }

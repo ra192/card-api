@@ -1,22 +1,18 @@
 package com.card.controller;
 
-import com.card.entity.Card;
-import com.card.entity.enums.CardType;
-import com.card.service.*;
-import com.card.controller.dto.CardDto;
-import com.card.controller.dto.CreateCardDto;
+import com.card.service.dto.CardDTO;
 import com.card.controller.dto.CreateCardTransactionDto;
 import com.card.controller.dto.TransactionDto;
+import com.card.service.*;
 import com.card.service.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/card")
 public class CardController extends WithAuthMerchantController {
-    private static final Logger logger= LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     private final CardService cardService;
     private final AccountService accountService;
@@ -31,20 +27,14 @@ public class CardController extends WithAuthMerchantController {
     }
 
     @PostMapping
-    public CardDto createVirtual(@RequestHeader String authorization, @RequestBody CreateCardDto requestObject)
+    public CardDTO createVirtual(@RequestHeader String authorization, @RequestBody CardDTO cardDTO)
             throws CustomerException, AccountException, MerchantException {
         logger.info("Create virtual card method was called with params:");
-        logger.info(requestObject.toString());
+        logger.info(cardDTO.toString());
 
         validateToken(authorization);
-        final var card = new Card(CardType.VIRTUAL, customerService.findActiveById(requestObject.getCustomerId()),
-                accountService.findActiveById(requestObject.getAccountId()));
-        cardService.create(card);
 
-        final var result = new CardDto();
-        BeanUtils.copyProperties(card, result);
-
-        return result;
+        return cardService.create(cardDTO);
     }
 
     @PostMapping("/deposit")

@@ -1,6 +1,7 @@
 package com.card.service;
 
 import com.card.entity.Merchant;
+import com.card.service.dto.TokenDTO;
 import com.card.service.exception.TokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -31,7 +32,7 @@ public class TokenService {
         this.expirationInMinutes = expirationInMinutes;
     }
 
-    public String create(Merchant merchant, String secret) throws TokenException, NoSuchAlgorithmException {
+    public TokenDTO create(Merchant merchant, String secret) throws TokenException, NoSuchAlgorithmException {
         if (!merchant.getSecret().equalsIgnoreCase(sha256Hash(secret)))
             throw new TokenException("Secret is not valid");
         final var token = Jwts.builder().setSubject(String.valueOf(merchant.getId()))
@@ -41,7 +42,7 @@ public class TokenService {
 
         logger.info("Token was created");
 
-        return token;
+        return new TokenDTO(token);
     }
 
     public Long validate(String token) {

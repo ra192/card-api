@@ -1,9 +1,9 @@
-package com.card.controller.dto;
+package com.card.service.dto;
 
-public class TokenDto {
+public class TokenDTO {
     private final String token;
 
-    public TokenDto(String token) {
+    public TokenDTO(String token) {
         this.token = token;
     }
 

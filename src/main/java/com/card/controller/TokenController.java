@@ -1,7 +1,7 @@
 package com.card.controller;
 
 import com.card.controller.dto.CreateTokenDto;
-import com.card.controller.dto.TokenDto;
+import com.card.service.dto.TokenDTO;
 import com.card.service.TokenService;
 import com.card.service.MerchantService;
 import com.card.service.exception.TokenException;
@@ -29,13 +29,11 @@ public class TokenController extends BaseController {
     }
 
     @PostMapping
-    public TokenDto create(@RequestBody CreateTokenDto requestObj) throws MerchantException,
+    public TokenDTO create(@RequestBody CreateTokenDto requestObj) throws MerchantException,
             NoSuchAlgorithmException, TokenException {
         logger.info("Create token method was called with params:");
         logger.info(requestObj.toString());
 
-        final var token = tokenService.create(merchantService.findById(requestObj.getMerchantId()), requestObj.getSecret());
-
-        return new TokenDto(token);
+        return tokenService.create(merchantService.findById(requestObj.getMerchantId()), requestObj.getSecret());
     }
 }

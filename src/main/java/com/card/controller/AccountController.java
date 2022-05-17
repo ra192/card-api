@@ -1,7 +1,7 @@
 package com.card.controller;
 
 import com.card.controller.dto.FundAccountDto;
-import com.card.controller.dto.TransactionDto;
+import com.card.service.dto.TransactionDTO;
 import com.card.service.AccountService;
 import com.card.service.MerchantService;
 import com.card.service.TokenService;
@@ -29,7 +29,7 @@ public class AccountController extends WithAuthMerchantController {
     }
 
     @PostMapping("/fund")
-    public TransactionDto fund(@RequestHeader String authorization, @RequestBody FundAccountDto requestObject)
+    public TransactionDTO fund(@RequestHeader String authorization, @RequestBody FundAccountDto requestObject)
             throws MerchantException, AccountException, TransactionException {
         logger.info("Fund account method was called with params:");
         logger.info(requestObject.toString());
@@ -37,9 +37,7 @@ public class AccountController extends WithAuthMerchantController {
         final var merchant = validateToken(authorization);
         if (!merchant.getId().equals(INTERNAL_MERCHANT_ID)) throw new MerchantException("Internal merchant required");
 
-        final var transaction = transactionService.fund(accountService.findActiveById(requestObject.getAccountId()),
+        return transactionService.fund(accountService.findActiveById(requestObject.getAccountId()),
                 requestObject.getAmount(), requestObject.getOrderId());
-
-        return new TransactionDto(transaction.getId(), transaction.getStatus());
     }
 }

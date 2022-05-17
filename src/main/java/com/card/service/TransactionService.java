@@ -9,8 +9,10 @@ import com.card.entity.enums.TransactionType;
 import com.card.repository.TransactionFeeRepository;
 import com.card.repository.TransactionItemRepository;
 import com.card.repository.TransactionRepository;
+import com.card.service.dto.TransactionDTO;
 import com.card.service.exception.AccountException;
 import com.card.service.exception.TransactionException;
+import com.card.service.mapper.TransactionMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,16 +26,19 @@ public class TransactionService {
     private final TransactionFeeRepository transactionFeeRepository;
     private final AccountService accountService;
 
+    private final TransactionMapper transactionMapper;
+
     public TransactionService(TransactionRepository transactionRepository,
                               TransactionItemRepository transactionItemRepository,
-                              TransactionFeeRepository transactionFeeRepository, AccountService accountService) {
+                              TransactionFeeRepository transactionFeeRepository, AccountService accountService, TransactionMapper transactionMapper) {
         this.transactionRepository = transactionRepository;
         this.transactionItemRepository = transactionItemRepository;
         this.transactionFeeRepository = transactionFeeRepository;
         this.accountService = accountService;
+        this.transactionMapper = transactionMapper;
     }
 
-    public Transaction deposit(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
+    public TransactionDTO deposit(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
                                TransactionType type, String orderId, Card card) throws TransactionException {
         final var feeAmount = calculateFee(amount, type, destAccount);
         if (sumByAccount(srcAccount) - amount < 0)
@@ -45,20 +50,20 @@ public class TransactionService {
 
         logger.info("transaction {} was created", transaction.getType());
 
-        return transaction;
+        return transactionMapper.toDto(transaction);
     }
 
-    public Transaction fund(Account account, Long amount, String orderId) throws TransactionException, AccountException {
+    public TransactionDTO fund(Account account, Long amount, String orderId) throws TransactionException, AccountException {
         final var cashAccount = accountService.getCashAccount();
 
         final var transaction = createTransaction(cashAccount, account, amount, TransactionType.FUND, orderId, null);
 
         logger.info("transaction {} was created", transaction.getType());
 
-        return transaction;
+        return transactionMapper.toDto(transaction);
     }
 
-    public Transaction withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
+    public TransactionDTO withdraw(Account srcAccount, Account destAccount, Account feeAccount, Long amount,
                                 TransactionType type, String orderId, Card card) throws TransactionException {
         final var feeAmount = calculateFee(amount, type, srcAccount);
         if (sumByAccount(srcAccount) - amount - feeAmount < 0)
@@ -70,7 +75,7 @@ public class TransactionService {
 
         logger.info("transaction {} was created", transaction.getType());
 
-        return transaction;
+        return transactionMapper.toDto(transaction);
     }
 
     private Transaction createTransaction(Account srcAccount, Account destAccount, Long amount, TransactionType type,

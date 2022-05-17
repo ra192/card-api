@@ -6,6 +6,7 @@ import com.card.entity.Card;
 import com.card.entity.Customer;
 import com.card.entity.Transaction;
 import com.card.entity.enums.TransactionType;
+import com.card.service.dto.TransactionDTO;
 import com.card.service.mapper.CardMapper;
 import com.card.repository.CardRepository;
 import com.card.repository.CustomerRepository;
@@ -59,7 +60,7 @@ public class CardService {
         return cardMapper.toDto(card);
     }
 
-    public Transaction deposit(Card card, Long amount, String orderId) throws TransactionException, AccountException {
+    public TransactionDTO deposit(Card card, Long amount, String orderId) throws TransactionException, AccountException {
         return transactionService.withdraw(card.getAccount(), accountService.findActiveById(CARD_ACCOUNT_ID),
                 accountService.findActiveById(FEE_ACCOUNT_ID), amount,
                 TransactionType.VIRTUAL_CARD_DEPOSIT, orderId, card);
@@ -69,7 +70,7 @@ public class CardService {
         return cardRepository.findById(id).orElseThrow(() -> new CardException("Card does not exist"));
     }
 
-    public Transaction withdraw(Card card, Long amount, String orderId) throws AccountException, TransactionException {
+    public TransactionDTO withdraw(Card card, Long amount, String orderId) throws AccountException, TransactionException {
         return transactionService.deposit(accountService.findActiveById(CARD_ACCOUNT_ID), card.getAccount(),
                 accountService.findActiveById(FEE_ACCOUNT_ID), amount,
                 TransactionType.VIRTUAL_CARD_WITHDRAW, orderId, card);

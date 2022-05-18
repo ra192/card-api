@@ -1,7 +1,9 @@
 package com.card.service;
 
 import com.card.entity.Merchant;
+import com.card.repository.MerchantRepository;
 import com.card.service.dto.TokenDTO;
+import com.card.service.exception.MerchantException;
 import com.card.service.exception.TokenException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -25,14 +27,17 @@ public class TokenService {
 
     private final String jwtSecretKey;
     private final Long expirationInMinutes;
+    private final MerchantRepository merchantRepository;
 
     public TokenService(@Value("${com.card.auth.jwt.secret}") String jwtSecretKey,
-                        @Value("${com.card.auth.jwt.expiration.minutes}") Long expirationInMinutes) {
+                        @Value("${com.card.auth.jwt.expiration.minutes}") Long expirationInMinutes, MerchantRepository merchantRepository) {
         this.jwtSecretKey = jwtSecretKey;
         this.expirationInMinutes = expirationInMinutes;
+        this.merchantRepository = merchantRepository;
     }
 
-    public TokenDTO create(Merchant merchant, String secret) throws TokenException, NoSuchAlgorithmException {
+    public TokenDTO create(Long merchantId, String secret) throws TokenException, NoSuchAlgorithmException, MerchantException {
+        final Merchant merchant = merchantRepository.findById(merchantId).orElseThrow(() -> new MerchantException("Merchant doesn't exist"));
         if (!merchant.getSecret().equalsIgnoreCase(sha256Hash(secret)))
             throw new TokenException("Secret is not valid");
         final var token = Jwts.builder().setSubject(String.valueOf(merchant.getId()))

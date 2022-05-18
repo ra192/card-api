@@ -1,8 +1,8 @@
-package com.card.controller.dto;
+package com.card.controller.objs;
 
 import javax.validation.constraints.NotNull;
 
-public class CreateCardTransactionDto {
+public class CreateCardTransactionRequest {
     @NotNull(message = "card id is required")
     private Long cardId;
     @NotNull(message = "amount is required")

@@ -1,6 +1,6 @@
-package com.card.controller.dto;
+package com.card.controller.objs;
 
-public class FundAccountDto {
+public class FundAccountRequest {
     private Long accountId;
     private Long amount;
     private String orderId;

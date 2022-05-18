@@ -1,7 +1,7 @@
 package com.card.controller;
 
 import com.card.service.dto.CardDTO;
-import com.card.controller.dto.CreateCardTransactionDto;
+import com.card.controller.objs.CreateCardTransactionRequest;
 import com.card.service.dto.TransactionDTO;
 import com.card.service.*;
 import com.card.service.exception.*;
@@ -38,7 +38,7 @@ public class CardController extends WithAuthMerchantController {
     }
 
     @PostMapping("/deposit")
-    public TransactionDTO deposit(@RequestHeader String authorization, @RequestBody CreateCardTransactionDto requestObject)
+    public TransactionDTO deposit(@RequestHeader String authorization, @RequestBody CreateCardTransactionRequest requestObject)
             throws TransactionException, CardException, MerchantException, AccountException {
         logger.info("Card deposit method was called with params:");
         logger.info(requestObject.toString());
@@ -50,7 +50,7 @@ public class CardController extends WithAuthMerchantController {
     }
 
     @PostMapping("/withdraw")
-    public TransactionDTO withdraw(@RequestHeader String authorization, @RequestBody CreateCardTransactionDto requestObject)
+    public TransactionDTO withdraw(@RequestHeader String authorization, @RequestBody CreateCardTransactionRequest requestObject)
             throws CardException, MerchantException, AccountException, TransactionException {
         logger.info("Card withdraw method was called with params:");
         logger.info(requestObject.toString());

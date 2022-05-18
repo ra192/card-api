@@ -1,9 +1,9 @@
-package com.card.controller.dto;
+package com.card.controller.objs;
 
-public class ErrorDto {
+public class ErrorResponse {
     private final String errorText;
 
-    public ErrorDto(String errorText) {
+    public ErrorResponse(String errorText) {
         this.errorText = errorText;
     }
 

@@ -1,9 +1,9 @@
-package com.card.controller.dto;
+package com.card.controller.objs;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class CreateTokenDto {
+public class CreateTokenRequest {
     @NotNull
     private Long merchantId;
     @NotEmpty

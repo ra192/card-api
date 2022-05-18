@@ -1,6 +1,6 @@
 package com.card.controller;
 
-import com.card.controller.dto.FundAccountDto;
+import com.card.controller.objs.FundAccountRequest;
 import com.card.service.dto.TransactionDTO;
 import com.card.service.AccountService;
 import com.card.service.MerchantService;
@@ -29,7 +29,7 @@ public class AccountController extends WithAuthMerchantController {
     }
 
     @PostMapping("/fund")
-    public TransactionDTO fund(@RequestHeader String authorization, @RequestBody FundAccountDto requestObject)
+    public TransactionDTO fund(@RequestHeader String authorization, @RequestBody FundAccountRequest requestObject)
             throws MerchantException, AccountException, TransactionException {
         logger.info("Fund account method was called with params:");
         logger.info(requestObject.toString());

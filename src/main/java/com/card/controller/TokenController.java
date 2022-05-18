@@ -20,11 +20,9 @@ import java.security.NoSuchAlgorithmException;
 public class TokenController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(TokenController.class);
 
-    private final MerchantService merchantService;
     private final TokenService tokenService;
 
-    public TokenController(MerchantService merchantService, TokenService tokenService) {
-        this.merchantService = merchantService;
+    public TokenController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 

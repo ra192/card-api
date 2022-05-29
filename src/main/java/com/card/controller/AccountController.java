@@ -11,6 +11,7 @@ import com.card.service.exception.MerchantException;
 import com.card.service.exception.TransactionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +30,7 @@ public class AccountController extends WithAuthMerchantController {
     }
 
     @PostMapping("/fund")
-    public TransactionDTO fund(@RequestHeader String authorization, @RequestBody FundAccountRequest requestObject)
+    public ResponseEntity<TransactionDTO> fund(@RequestHeader String authorization, @RequestBody FundAccountRequest requestObject)
             throws MerchantException, AccountException, TransactionException {
         logger.info("Fund account method was called with params:");
         logger.info(requestObject.toString());
@@ -37,7 +38,7 @@ public class AccountController extends WithAuthMerchantController {
         final var merchant = validateToken(authorization);
         if (!merchant.getId().equals(INTERNAL_MERCHANT_ID)) throw new MerchantException("Internal merchant required");
 
-        return transactionService.fund(accountService.findActiveById(requestObject.getAccountId()),
-                requestObject.getAmount(), requestObject.getOrderId());
+        return ResponseEntity.ok(transactionService.fund(accountService.findActiveById(requestObject.getAccountId()),
+                requestObject.getAmount(), requestObject.getOrderId()));
     }
 }

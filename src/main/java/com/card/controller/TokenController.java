@@ -8,6 +8,7 @@ import com.card.service.exception.TokenException;
 import com.card.service.exception.MerchantException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,11 +28,11 @@ public class TokenController extends BaseController {
     }
 
     @PostMapping
-    public TokenDTO create(@RequestBody CreateTokenRequest requestObj) throws MerchantException,
+    public ResponseEntity<TokenDTO> create(@RequestBody CreateTokenRequest requestObj) throws MerchantException,
             NoSuchAlgorithmException, TokenException {
         logger.info("Create token method was called with params:");
         logger.info(requestObj.toString());
 
-        return tokenService.create(requestObj.getMerchantId(), requestObj.getSecret());
+        return ResponseEntity.ok(tokenService.create(requestObj.getMerchantId(), requestObj.getSecret()));
     }
 }

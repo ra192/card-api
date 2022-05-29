@@ -9,6 +9,7 @@ import com.card.service.exception.MerchantException;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,7 +30,7 @@ public class CustomerController extends WithAuthMerchantController {
 
     @Operation(summary = "Register customer")
     @PostMapping
-    public CustomerDTO create(@RequestHeader String authorization, @RequestBody @Valid CustomerDTO customerDto) throws MerchantException, CustomerException {
+    public ResponseEntity<CustomerDTO> create(@RequestHeader String authorization, @RequestBody @Valid CustomerDTO customerDto) throws MerchantException, CustomerException {
         logger.info("Create customer method wath called with params:");
         logger.info(customerDto.toString());
 
@@ -37,6 +38,6 @@ public class CustomerController extends WithAuthMerchantController {
         if(!Objects.equals(merchant.getId(), customerDto.getMerchantId()))
             throw new MerchantException("Merchant id doesn't match with token");
 
-        return customerService.create(customerDto);
+        return ResponseEntity.ok(customerService.create(customerDto));
     }
 }
